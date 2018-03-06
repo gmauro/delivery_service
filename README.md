@@ -23,7 +23,7 @@ to setup the servers on your remote host defined into the inventory file
 
 Digit: 
 ```bash
-ansible-playbook -i inventory create_user
+ansible-playbook -i inventory create_user.yml
 ```
 to create a user with a random username and a random generated password.  
 This user can be used to log in into the WebDAV and the FTPES servers.
