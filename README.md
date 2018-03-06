@@ -35,5 +35,5 @@ experience of browsing the WebDAV server
 directories.
 
 These web pages has been very useful to configure correctly the servers:
-[https://hexeract.wordpress.com/2011/02/25/configure-a-webdav-enabled-webserver-for-multiple-user-folders-and-one-shared-folder/](https://hexeract.wordpress.com/2011/02/25/configure-a-webdav-enabled-webserver-for-multiple-user-folders-and-one-shared-folder/)  
+[https://hexeract.wordpress.com/2011/02/25/configure-a-webdav-enabled-webserver-for-multiple-user-folders-and-one-shared-folder/](https://hexeract.wordpress.com/2011/02/25/configure-a-webdav-enabled-webserver-for-multiple-user-folders-and-one-shared-folder/)   
 [http://icephoenix.us/linuxunix/apache-and-http-authentication-with-pam/](http://icephoenix.us/linuxunix/apache-and-http-authentication-with-pam/)

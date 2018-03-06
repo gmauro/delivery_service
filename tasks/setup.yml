@@ -17,3 +17,16 @@
     password: "{{ delivery_user_password }}"
     state: present
     update_password: always
+
+- name: copy script to remove expired users
+  template:
+    src: remove_expired.sh.j2
+    dest: /root/remove_expired.sh
+    mode: 0755
+
+- name: set cron to remove expired users
+  cron:
+    name: "remove expired users"
+    minute: "0"
+    hour: "5"
+    job: "/root/remove_expired.sh"

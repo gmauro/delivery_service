@@ -9,8 +9,8 @@
       script: files/random_gen 8
       register: r_user
 
-    - name: set random_user
-      set_fact: random_user="{{r_user.stdout}}"
+#    - name: set random_user
+#      set_fact: random_user="{{r_user.stdout}}"
 
     - name: generate_random_password
       script: files/random_gen 12
@@ -19,8 +19,8 @@
     - name: set random_clear_text_password
       set_fact: random_clear_text_password="{{r_password.stdout}}"
 
-    - name: set home directory
-      set_fact: home_dir="{{homes_root_dir}}/{{random_user}}"
+#    - name: set home directory
+#      set_fact: home_dir="{{homes_root_dir}}/{{random_user}}"
 
     - name: create random SALT to crypt password
       shell: cat /dev/urandom | tr -dc 'qwertQWERTasdfgASDFGzxcvbZXCVB' | head -c12
@@ -33,11 +33,36 @@
       command: "mkpasswd -m sha-512 {{ random_clear_text_password }} {{ random_salt }}"
       register: encrypted_password_json
 
-    - name: set encrypted_password var
-      set_fact: encrypted_password="{{encrypted_password_json.stdout}}"
+#    - name: set encrypted_password var
+#      set_fact: encrypted_password="{{encrypted_password_json.stdout}}"
+
+    - name: generate nextmonths
+      script: files/nextmonths
+      register: nm
+
+    - name: setting facts
+      set_fact:
+        random_user: "{{r_user.stdout}}"
+
+    - name: setting facts
+      set_fact:
+        encrypted_password: "{{encrypted_password_json.stdout}}"
+        home_dir: "{{homes_root_dir}}/{{random_user}}"
+        nextmonths: "{{ nm.stdout }}"
+
 
     - name: create new user
-      user: name={{ random_user }} shell=/usr/sbin/nologin comment="random user"  group={{ delivery_group_name }} home={{ home_dir }} password={{ encrypted_password }} state=present force=yes remove=yes
+      user:
+        name: "{{ random_user }}"
+        shell: "/usr/sbin/nologin"
+        comment: "random user"
+        group: "{{ delivery_group_name }}"
+        home: "{{ home_dir }}"
+        password: "{{ encrypted_password }}"
+        state: present
+        force: yes
+        remove: yes
+        expires: "{{ nextmonths }}"
 
     - name: change home dir permission
       file:
@@ -59,7 +84,8 @@
       debug:
         msg: "Username {{ random_user }} , \
               password {{ random_clear_text_password }} , \
-              home_dir: {{ home_dir }}"
+              home_dir {{ home_dir }} \
+              time {{ ansible_date_time.epoch }}"
 
     - name: reload apache
       service: name=apache2 state=reloaded

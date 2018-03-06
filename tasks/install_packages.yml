@@ -21,3 +21,10 @@
     - nfs-common
   when:
     - ansible_distribution == 'Debian'
+
+- name: install utilities
+  apt: name={{ item }} state={{ packages_state }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - python-dateutil
+  when:
+    - ansible_distribution == 'Debian'
