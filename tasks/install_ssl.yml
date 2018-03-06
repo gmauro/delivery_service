@@ -1,0 +1,20 @@
+- name: create SSL directory
+  file:
+    path: "{{ ssl_remote_dir }}"
+    state: directory
+    mode: 0755
+  when: install_ssl
+
+- name: copy SSL files
+  copy:
+    src: "private/{{ item }}"
+    dest: "{{ ssl_remote_dir }}"
+    mode: 0755
+  with_items:
+    - SSLCertificateFile.crt
+    - SSLCertificateKeyFile.key
+    - SSLCertificateChainFile.crt
+  when: install_ssl
+  notify:
+    - restart apache
+    - restart proftpd

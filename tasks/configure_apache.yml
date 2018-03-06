@@ -1,0 +1,51 @@
+- name: change Apache run group
+  replace:
+    path: "{{ apache_envvars_path }}"
+    regexp: "{{ item.rp }}"
+    replace: "{{ item.value }}"
+  with_items:
+    - { rp: "export APACHE_RUN_GROUP=www-data", value: "export APACHE_RUN_GROUP={{ delivery_group_name }}", after: "export APACHE_RUN_GROUP"}
+  notify:
+    - restart apache
+
+
+- name: copy webdav_site configuration
+  template:
+    src: webdav.conf.j2
+    dest: "{{ apache_site_path }}/webdav.conf"
+
+- name: create conf directory
+  file:
+    path: "{{ webdav_conf_path }}"
+    state: directory
+    mode: 0755
+
+- name: disable default site
+  command: a2dissite 000-default.conf
+  chdir: "{{ apache_site_path }}"
+  notify:
+    - restart apache
+
+
+- name: enable Apache2 modules
+  apache2_module: name={{ item }} state=present
+  with_items:
+    - authnz_external
+    - authz_unixgroup
+    - dav
+    - dav_fs
+    - ssl
+  notify:
+    - restart apache
+
+
+- name: copy theme files
+  copy:
+    src: static/
+    dest: "{{ DocumentRoot }}"
+
+- name: enable webdav site
+  command: a2ensite webdav
+  chdir: "{{ apache_site_path }}"
+  notify:
+    - restart apache

@@ -1,0 +1,35 @@
+
+- name: configure ProFTD server
+  lineinfile:
+    path: "{{ proftpd_conf_path }}"
+    regexp: "{{ item.rp }}"
+    insertafter: "{{ item.after }}"
+    line: "{{ item.value }}"
+    state: present
+  with_items:
+    - { rp: "^ServerName", value: "ServerName {{ ServerName }}", after: "# ServerName"}
+    - { rp: "^PassivePorts", value: "PassivePorts 60000 65535", after: "# PassivePorts" }
+    - { rp: "^DefaultRoot", value: "DefaultRoot ~", after: "# DefaultRoot"}
+    - { rp: "^RequireValidShell", value: "RequireValidShell off", after: "# RequireValidShell"}
+    - { rp: "^Include /etc/proftpd/tls.conf",value: "Include /etc/proftpd/tls.conf", after: "#Include /etc/proftpd/tls.conf"}
+  notify:
+    - restart proftpd
+
+- name: configure TLS ProFTD server
+  lineinfile:
+    path: "{{ tls_conf_path }}"
+    insertafter: "<IfModule mod_tls.c>"
+    line: "{{ item }}"
+    state: present
+  with_items:
+    - "TLSEngine                               on"
+    - "TLSLog                                  /var/log/proftpd/tls.log"
+    - "TLSProtocol                             SSLv23"
+    - "TLSRSACertificateFile                   {{ ssl_remote_dir }}/{{ SSLCertificateFile }}"
+    - "TLSRSACertificateKeyFile                {{ ssl_remote_dir }}/{{ SSLCertificateKeyFile }}"
+    - "TLSOptions                      NoCertRequest EnableDiags NoSessionReuseRequired"
+    - "TLSVerifyClient                         off"
+    - "TLSRequired                             on"
+    - "TLSRenegotiate                          required off"
+  notify:
+    - restart proftpd

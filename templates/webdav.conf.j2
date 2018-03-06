@@ -1,0 +1,33 @@
+DavLockDB {{ DavLockDB }}
+
+<VirtualHost *:80>
+     ServerName {{ ServerName }}
+     Redirect permanent / https://{{ ServerName }}/
+</VirtualHost>
+
+
+<IfModule mod_ssl.c>
+   <VirtualHost _default_:443>
+	ServerName {{ ServerName }}
+	ServerAdmin {{ ServerAdmin }}
+	DocumentRoot {{ DocumentRoot }}
+
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+	AddExternalAuth pwauth /usr/sbin/pwauth
+	SetExternalAuthMethod pwauth pipe
+
+	# SSL Engine Switch:
+	# Enable/Disable SSL for this virtual host.
+	SSLEngine on
+
+	SSLCertificateFile {{ ssl_remote_dir }}/{{ SSLCertificateFile }}
+	SSLCertificateKeyFile {{ ssl_remote_dir }}/{{ SSLCertificateKeyFile }}
+	SSLCertificateChainFile {{ ssl_remote_dir }}/{{ SSLCertificateChainFile }}
+
+	# webdav configuration files
+	IncludeOptional {{ webdav_conf_path }}/*.conf
+
+   </VirtualHost>
+</IfModule>

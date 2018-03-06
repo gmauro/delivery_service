@@ -1,0 +1,2 @@
+[delivery]
+servername ansible_ssh_user=root

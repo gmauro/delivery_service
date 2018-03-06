@@ -1,0 +1,39 @@
+# Default variables used during the setup phase.
+# http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
+
+install_server_packages: yes
+packages_state: present
+locale: en_US
+encoding: UTF-8
+
+delivery_user_name: username
+delivery_user_uid: 11350
+delivery_user_password: "$6$g/Xa716v$m8q0bHA.nGHgy9CcT564iGBLoTDPdrk9EHe4e38xoCHFOywS2MyTRQZDTvvgXO/mudySOyYKG0rhdsuK77jH//"
+delivery_group_name: username
+delivery_group_gid: 4046
+
+
+ServerName: servername
+ServerAdmin: admin@servername
+DocumentRoot: /var/www/html
+
+install_ssl: yes
+ssl_remote_dir: "/etc/ssl/{{ ServerName }}"
+SSLCertificateFile: SSLCertificateFile.crt
+SSLCertificateKeyFile: SSLCertificateKeyFile.key
+SSLCertificateChainFile: SSLCertificateChainFile.crt
+
+data_path: /ftp_data/webdav
+homes_root_dir:  "{{ data_path }}/data"
+mount_remote_data_path: yes
+remote_data_path: "/remote/path/to/webdav"
+
+DavLockDB: "{{ data_path }}/DavLock"
+apache_path: /etc/apache2
+apache_site_path: "{{ apache_path }}/sites-available"
+apache_envvars_path: "{{ apache_path }}/envvars"
+webdav_conf_path: "{{ apache_path }}/webdav_conf"
+
+proftpd_path: /etc/proftpd
+proftpd_conf_path: "{{ proftpd_path }}/proftpd.conf"
+tls_conf_path: "{{ proftpd_path }}/tls.conf"

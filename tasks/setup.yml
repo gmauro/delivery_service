@@ -1,0 +1,19 @@
+- name: Ensure a locale exists.
+  locale_gen: name={{ locale }}.{{ encoding }} state=present
+
+- name: create delivery group
+  group:
+    name: "{{ delivery_group_name }}"
+    gid: "{{ delivery_group_gid }}"
+    state: present
+
+- name: create delivery user
+  user:
+    name: "{{ delivery_user_name }}"
+    uid: "{{ delivery_user_uid }}"
+    shell: /bin/bash
+    comment: "delivery user"
+    group: "{{ delivery_group_name }}"
+    password: "{{ delivery_user_password }}"
+    state: present
+    update_password: always

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>ftp.bioinformatica.crs4.it</title>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+</head>
+
+
+  <body>
+<section>
+  <div class="jumbotron">
+    <div class="container">
+      <h3>ftp.bioinformatica.crs4.it</h3><h1>Delivery server<br/>CRS4 Bioinformatics Lab!</h1><h3>Hope you like it!</h3>
+    </div>
+</div>
+</section>
+
+<section id="page-content">
+  <div class="container">
+    <div class="post-list">
+  
+  <div class="post-box">
+      If you have received personalized authentication credentials from us ( a username and a password ), <br/>
+      then you can:
+      <ul>
+      <li><a href="#browser">Access your data from the web browser</a></li>
+      <li><a href="#ftp">Access your data using a FTP client</a></li>
+      <li><a href="#webdav">Access your data using a WebDAV client</a></li>
+      <li><a href="#shell">Access your data from a shell client</a></li>
+
+</ul>
+
+    <div class="manual-title">
+        <h2><a name="browser">Access your data from the web browser</a><h2/>
+    </div>
+    <div class="post-excerpt">
+       You can access the server using  your preferred browser, in this way:
+      <ul>
+      <li>point your browser directly to https://ftp.bioinformatica.crs4.it/username</li>
+      <li>log in using your credentials</li>
+      <li>explore the folder tree </li>
+      <li>download your files just clicking on it</li>
+      </ul>
+    </div>
+  </div>
+
+  <br>
+  <div class="post-box">
+    <div class="post-title">
+        <h2><a name="ftp">Access your data using a FTP client</a></h2>
+    </div>
+    <div class="post-excerpt">
+      You can access the server using a gui client such as <a
+            href="https://filezilla-project.org/" target=_blank>FileZilla</a> available for Windows, Mac and Linux.
+	<br/><br/>
+    In FileZilla, open the Site Manager:  <br/><br/>
+	<img src="Screenshot0.png">
+	<br/><br/>
+    Create a new site with the "New Site" button, give it a name, and insert ftp.bioinformatica.crs4.it as Host.
+    <br/><br/>
+If you are using an old version of FileZilla and you see a Server Type field, choose "FTPES". <br/>
+        Otherwise, choose "FTP" as Protocol, and "Require explicit FTP over TLS" as Encryption.
+     <br/><br/>
+Moreover, choose "Normal" as Logon Type, and insert the User and Password you received from the FTP administrator.
+      <br/><br/>
+        <img src="Screenshot1.png">
+        <br/><br/>
+        If everything went well, you should now be logged in on the server:
+        <br/><br/>
+        <img src="Screenshot4.png">
+    </div>
+
+  </div>
+
+  <br>
+  <div class="post-box">
+    <div class="post-title">
+        <h2><a name="webdav">Access your data using a WebDAV client</a></h2>
+    </div>
+    <div class="post-excerpt">
+      You can access the server using a gui client such as <a href="https://cyberduck.io/" target=_blank>https://cyberduck.io/</a>
+	<br/><br/>
+	<img src="cyberduck.png">
+	<br/><br/><br/><br/>
+    </div>
+   
+  </div>
+
+    <br>
+  <div class="post-box">
+    <div class="post-title">
+        <h2><a name="shell">Access your data using a shell client</a></h2>
+    </div>
+    <div class="post-excerpt">
+     To retrieve files from the server, you can use curl: <br>
+
+<pre>curl -O -k --ftp-ssl -u username:password ftp://ftp.bioinformatica.crs4.it/file</pre>
+
+To upload files to the server, you can use curl: <br>
+
+<pre>curl -T filename -k --ftp-ssl -u username:password ftp://ftp.bioinformatica.crs4.it/destination_folder/</pre>
+
+To upload multiple files to the server, you can combine find and curl: <br>
+
+<pre>find foldername -type f -exec curl -T {} -k --ftp-ssl --ftp-create-dirs -u username:password ftp://ftp.bioinformatica.crs4.it/{} \;</pre>
+
+To check whether a remote file exists: <br>
+
+<pre>curl -I -k --ftp-ssl -u username:password ftp://ftp.bioinformatica.crs4.it/filename</pre>
+
+
+	<br/><br/><br/><br/>
+    </div>
+
+  </div>
+  
+  </div>
+</section>
+
+</section>
+<nav class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container footer-content">    
+   
+  </div>
+</nav>
+
+  </body>
+
+</html>

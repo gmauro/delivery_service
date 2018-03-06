@@ -1,0 +1,66 @@
+- hosts: delivery
+  gather_facts: True
+  vars_files:
+  - vars/main.yml
+  handlers:
+  - include: handlers/main.yml
+  tasks:
+    - name: generate random_user
+      script: files/random_gen 8
+      register: r_user
+
+    - name: set random_user
+      set_fact: random_user="{{r_user.stdout}}"
+
+    - name: generate_random_password
+      script: files/random_gen 12
+      register: r_password
+
+    - name: set random_clear_text_password
+      set_fact: random_clear_text_password="{{r_password.stdout}}"
+
+    - name: set home directory
+      set_fact: home_dir="{{homes_root_dir}}/{{random_user}}"
+
+    - name: create random SALT to crypt password
+      shell: cat /dev/urandom | tr -dc 'qwertQWERTasdfgASDFGzxcvbZXCVB' | head -c12
+      register: random_salt_json
+
+    - name: set random_salt var
+      set_fact: random_salt="{{random_salt_json.stdout}}"
+
+    - name: encrypt password
+      command: "mkpasswd -m sha-512 {{ random_clear_text_password }} {{ random_salt }}"
+      register: encrypted_password_json
+
+    - name: set encrypted_password var
+      set_fact: encrypted_password="{{encrypted_password_json.stdout}}"
+
+    - name: create new user
+      user: name={{ random_user }} shell=/usr/sbin/nologin comment="random user"  group={{ delivery_group_name }} home={{ home_dir }} password={{ encrypted_password }} state=present force=yes remove=yes
+
+    - name: change home dir permission
+      file:
+        path: "{{ home_dir }}"
+        recurse: yes
+        owner: "{{ random_user }}"
+        group: "{{ delivery_group_name}}"
+        mode: 0770
+
+    - name: add user to webdav.user.conf
+      template:
+        src: webdav.user.conf.j2
+        dest: '{{ webdav_conf_path }}/{{ random_user }}.conf'
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: Display all variables/facts known for the random user
+      debug:
+        msg: "Username {{ random_user }} , \
+              password {{ random_clear_text_password }} , \
+              home_dir: {{ home_dir }}"
+
+    - name: reload apache
+      service: name=apache2 state=reloaded
+

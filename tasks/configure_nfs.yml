@@ -1,0 +1,17 @@
+- name: create ftp_data directory
+  file:
+    path: "{{ data_path }}"
+    state: directory
+    mode: 0755
+
+- name: configure NFS client
+  mount:
+    path: "{{ data_path }}"
+    src: "{{ remote_data_path }}"
+    fstype: nfs
+    opts: "rsize=8192,wsize=8192,hard,intr"
+    state: mounted
+  when: mount_remote_data_path
+  notify:
+    - restart apache
+    - restart proftpd

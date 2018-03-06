@@ -1,0 +1,23 @@
+- name: install Apache2 server packages
+  apt: name={{ item }} state={{ packages_state }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - apache2
+    - libapache2-mod-authnz-external
+    - libapache2-mod-authz-unixgroup
+    - pwauth
+  when:
+      - ansible_distribution == 'Debian'
+
+- name: install ProFTPD server packages
+  apt: name={{ item }} state={{ packages_state }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - proftpd-basic
+  when:
+      - ansible_distribution == 'Debian'
+
+- name: install NFS packages
+  apt: name={{ item }} state={{ packages_state }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - nfs-common
+  when:
+    - ansible_distribution == 'Debian'

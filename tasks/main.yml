@@ -1,0 +1,13 @@
+- include: setup.yml
+
+- include: install_packages.yml
+  when: install_server_packages
+
+- include: configure_nfs.yml
+
+- include: install_ssl.yml
+
+- include: configure_apache.yml
+
+- include: configure_proftpd.yml
+
