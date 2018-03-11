@@ -1,11 +1,15 @@
 # Default variables used during the setup phase.
 # http://docs.ansible.com/ansible/faq.html#how-do-i-generate-crypted-passwords-for-the-user-module
 
+configure_apt_proxy: no
 install_server_packages: yes
 packages_state: present
 locale: en_US
 encoding: UTF-8
 
+expiration_time_in_months: 1
+
+setup_delivery_user_ssh_key: no
 delivery_user_name: username
 delivery_user_uid: 11350
 delivery_user_password: "$6$g/Xa716v$m8q0bHA.nGHgy9CcT564iGBLoTDPdrk9EHe4e38xoCHFOywS2MyTRQZDTvvgXO/mudySOyYKG0rhdsuK77jH//"
@@ -25,7 +29,7 @@ SSLCertificateChainFile: SSLCertificateChainFile.crt
 
 data_path: /ftp_data/webdav
 homes_root_dir:  "{{ data_path }}/data"
-mount_remote_data_path: yes
+mount_remote_data_path: no
 remote_data_path: "/remote/path/to/webdav"
 
 DavLockDB: "{{ data_path }}/DavLock"

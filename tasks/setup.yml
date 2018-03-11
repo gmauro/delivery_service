@@ -1,6 +1,19 @@
 - name: Ensure a locale exists.
   locale_gen: name={{ locale }}.{{ encoding }} state=present
 
+- name: install sudo
+  apt: name={{ item }} state={{ packages_state }} update_cache=yes cache_valid_time=3600
+  with_items:
+    - sudo
+  when:
+    - ansible_distribution == 'Debian'
+
+- name: copy sudoers file
+  template:
+    src: sudoers.j2
+    dest: /etc/sudoers.d/local
+    mode: 0440
+
 - name: create delivery group
   group:
     name: "{{ delivery_group_name }}"
@@ -18,6 +31,19 @@
     state: present
     update_password: always
 
+- name: create delivery user ssh directory
+  file:
+    path: "/home/{{ delivery_user_name }}/.ssh"
+    state: directory
+    mode: 0700
+  when: setup_delivery_user_ssh_key
+
+- name: copy delivery user public ssh key
+  copy:
+    src: private/authorized_keys
+    dest: "/home/{{ delivery_user_name }}/.ssh"
+  when: setup_delivery_user_ssh_key
+
 - name: copy script to remove expired users
   template:
     src: remove_expired.sh.j2
@@ -30,3 +56,9 @@
     minute: "0"
     hour: "5"
     job: "/root/remove_expired.sh"
+
+- name: copy apt proxy config
+  copy:
+    src: files/01proxy
+    dest: /etc/apt/apt.conf.d
+  when: configure_apt_proxy

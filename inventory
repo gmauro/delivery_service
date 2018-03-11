@@ -1,2 +1,5 @@
 [delivery]
 servername ansible_ssh_user=root
+
+[delivery_user]
+servername ansible_ssh_user=delivery_user_name
