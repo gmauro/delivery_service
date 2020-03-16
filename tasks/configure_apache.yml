@@ -8,7 +8,6 @@
   notify:
     - restart apache
 
-
 - name: copy webdav_site configuration
   template:
     src: webdav.conf.j2
@@ -22,7 +21,8 @@
 
 - name: disable default site
   command: a2dissite 000-default.conf
-  chdir: "{{ apache_site_path }}"
+  args:
+    chdir: "{{ apache_site_path }}"
   notify:
     - restart apache
 
@@ -46,6 +46,7 @@
 
 - name: enable webdav site
   command: a2ensite webdav
-  chdir: "{{ apache_site_path }}"
+  args:
+     chdir: "{{ apache_site_path }}"
   notify:
     - restart apache
